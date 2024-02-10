@@ -1,2 +1,5 @@
 # HideItems
-This extension made every item hidden exept the Settings and this button
+This is a GNOME extension from GNOME 45.
+
+The idea is came from MacOS, [Hidden](https://github.com/dwarvesf/hidden) extension.
+This extension provide help for a clean interface on the top bar.
