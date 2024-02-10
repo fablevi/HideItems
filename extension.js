@@ -1,29 +1,43 @@
-/* extension.js
- *
- * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 2 of the License, or
- * (at your option) any later version.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
- *
- * SPDX-License-Identifier: GPL-2.0-or-later
- */
 import {Extension} from 'resource:///org/gnome/shell/extensions/extension.js';
+import Gio from 'gi://Gio';
+import St from 'gi://St';
 
-export default class PlainExampleExtension extends Extension {
-    init(){
-        
+export default class HideItems extends Extension {
+    constructor(ext) {
+        super(ext);
     }
+
     enable() {
+        this._indicator = null;
+
+        this._showIcon = null;
+        this._hideIcon = null;
     }
 
     disable() {
+        this._indicator = null;
+
+        this._showIcon = null;
+        this._hideIcon = null;
+    }
+
+    _createButton(){
+        //icon size
+        this._iconSize = 16;
+
+        const showAdwIcon = Gio.icon_new_for_string(`${this.path}/icons/left-symbolic.svg`);
+        this._showIcon = this._createIcon(showAdwIcon);
+
+        const hideAdwIcon = Gio.icon_new_for_string(`${this.path}/icons/right-symbolic.svg`);
+        this._hideIcon = this._createIcon(hideAdwIcon);
+
+    }
+
+    _createIcon(icon) {
+        return new St.Icon({
+            gicon: icon,
+            style_class: 'system-status-icon',
+            icon_size: this._iconSize
+        });
     }
 }
