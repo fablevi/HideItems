@@ -1,0 +1,8 @@
+{
+  "name": "HideItems",
+  "description": "Hide everything on the right box exept this button and Settings window",
+  "uuid": "HideItems@fablevi.github.io",
+  "shell-version": [
+    "45"
+  ]
+}
