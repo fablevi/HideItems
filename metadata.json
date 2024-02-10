@@ -4,5 +4,8 @@
   "uuid": "HideItems@fablevi.github.io",
   "shell-version": [
     "45"
-  ]
+  ],
+  "url":"https://github.com/fablevi/HideItems",
+  "extension-id": "HideItems",
+  "gettext-domain": "HideItems"
 }
