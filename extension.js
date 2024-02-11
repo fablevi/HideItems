@@ -21,11 +21,26 @@ export default class HideItems extends Extension {
         this._iconRank = 0;
 
         this._createButton()
+
+        /*this._elementArray = [
+            this._indicator,
+            Main.panel.statusArea.quickSettings.get_parent()
+        ]*/
+
+        //Update if a new button added or old removed from the panel
+        //Main.panel._rightBox.connect('notify::first-child', (object, data) => { console.log(data.name)})
+        //this._indicator.get_parent().connect('notify', (object, data) => { console.log('added', data.name, this._indicator.get_parent() == Main.panel._rightBox.get_parent()) })
+        //Main.panel._rightBox.connect('notify::child-removed', () => { console.log('removed') }) console.log('notify data', data.name, data.flags)
+    
+        Main.panel._rightBox.connect('actor-added', (object, data) => { console.log(data.name)})
     }
 
     disable() {
+        this._indicator?.destroy();
+        this._showIcon?.destroy();
+        this._hideIcon?.destroy();
+       
         this._indicator = null;
-
         this._showIcon = null;
         this._hideIcon = null;
 
@@ -63,7 +78,7 @@ export default class HideItems extends Extension {
 
     _setButtonIcon() {
         try {
-            if(this._indicator.first_child !== null){
+            if (this._indicator.first_child !== null) {
                 this._indicator.remove_child(this._indicator.first_child)
             }
             if (this._visibility) {
@@ -71,24 +86,50 @@ export default class HideItems extends Extension {
             } else {
                 this._indicator.add_child(this._hideIcon)
             }
-        }catch (e){
-            console.log("HideItems error: ",e)
+        } catch (e) {
+            console.log("HideItems error: ", e)
         }
     }
 
-    _getSettingsRank(){
+    _getSettingsRank() {
         var rightBoxItems = Main.panel._rightBox.get_children();
         var rank = null;
-        rightBoxItems.map((item,index)=>{
-            if(item === Main.panel.statusArea.quickSettings.get_parent()){
+        rightBoxItems.map((item, index) => {
+            if (item === Main.panel.statusArea.quickSettings.get_parent()) {
                 rank = index;
             }
         })
-        console.log("index: ",rank)
-        return rank -1;
+        console.log("index: ", rank)
+        return rank - 1;
     }
 
-    _buttonClicked(actor, event) {
+    _buttonClicked() {
+        this._visibility = !this._visibility;
+        this._hideOrShowItems();
+        this._changeIcon();
+    }
 
+    _changeIcon() {
+        this._deleteIndicator();
+        this._createButton();
+    }
+
+    _deleteIndicator() {
+        this._showIcon?.destroy();
+        this._showIcon = null;
+        this._hideIcon?.destroy();
+        this._hideIcon = null;
+        this._indicator?.destroy();
+        this._indicator = null;
+    }
+
+    _hideOrShowItems() {
+        var rightBoxItems = Main.panel._rightBox.get_children();
+        console.log("items: ", rightBoxItems.toString())
+        rightBoxItems.map((item, index) => {
+            if(item !== Main.panel.statusArea.quickSettings.get_parent()) {
+                    item.visible = this._visibility;
+            }
+        })
     }
 }
