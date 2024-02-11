@@ -12,18 +12,20 @@ export default class HideItems extends Extension {
     enable() {
         console.log("Hide Items Extension started...");
         this._indicator = null;
+        this._oldIndicator = null;
 
         this._showIcon = null;
         this._hideIcon = null;
 
         //default visibility is true, but in the future i prepare it to state management
-        this._visibility = true;
+        this._visibility = false;
         this._iconRank = 0;
 
         this._createButton()
+        this._setIconVisibility();
 
         //Update if a new button added or old removed from the panel
-        //Main.panel._rightBox.connect('actor-added', (object, data) => { console.log(data.name)})
+        Main.panel._rightBox.connect('actor-added', (object, data) => { this._addedIconListener()})
     }
 
     disable() {
@@ -34,6 +36,7 @@ export default class HideItems extends Extension {
         this._indicator?.destroy();
         this._indicator = null;
 
+        this._oldIndicator = null;
         this._visibility = null;
         this._iconRank = null;
     }
@@ -56,6 +59,7 @@ export default class HideItems extends Extension {
 
 
         Main.panel.addToStatusArea(this.uuid, this._indicator, this._iconRank, "right");
+        this._oldIndicator = this._indicator;
     }
 
     _createIcon(icon) {
@@ -93,6 +97,7 @@ export default class HideItems extends Extension {
         return rank - 1;
     }
 
+    //CLICKED BUTTON
     _buttonClicked() {
         this._visibility = !this._visibility;
         this._hideOrShowItems();
@@ -113,4 +118,36 @@ export default class HideItems extends Extension {
             }
         })
     }
+
+    _setIconVisibility() {
+        this._visibility?
+            null
+            :
+            this._hideOrShowItems();
+        this._changeIcon();;
+    }
+
+    //LISTENER
+    _addedIconListener(){
+        console.log("this._checkRightBoxArray",this._checkRightBoxArray())
+        this._checkRightBoxArray()?
+            this._newIconAdded()
+        :null;
+    }
+
+    _checkRightBoxArray(){
+        var rightBoxItems = Main.panel._rightBox.get_children();
+        var isThere = false;
+        rightBoxItems.map((item, index) => {
+            if(item.child === this._oldIndicator) {
+                isThere = true;
+            }
+        })
+        return isThere;
+    }
+
+    _newIconAdded(){
+
+    }
+
 }
