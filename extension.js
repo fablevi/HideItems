@@ -77,8 +77,8 @@ export default class HideItems extends Extension {
     }
 
     _getSettingsRank(){
-        const rightBoxItems = Main.panel._rightBox.get_children();
-        const rank = null;
+        var rightBoxItems = Main.panel._rightBox.get_children();
+        var rank = null;
         rightBoxItems.map((item,index)=>{
             if(item === Main.panel.statusArea.quickSettings.get_parent()){
                 rank = index;
@@ -89,6 +89,6 @@ export default class HideItems extends Extension {
     }
 
     _buttonClicked(actor, event) {
-        
+
     }
 }
