@@ -18,6 +18,7 @@ export default class HideItems extends Extension {
 
         //default visibility is true, but in the future i prepare it to state management
         this._visibility = true;
+        this._iconRank = 0;
 
         this._createButton()
     }
@@ -29,6 +30,7 @@ export default class HideItems extends Extension {
         this._hideIcon = null;
 
         this._visibility = null;
+        this._iconRank = null;
     }
 
     _createButton() {
@@ -42,11 +44,13 @@ export default class HideItems extends Extension {
         this._hideIcon = this._createIcon(hideAdwIcon);
 
         this._indicator = new PanelMenu.Button(0.0, this.metadata.name, false);
-        //this._indicator.connect('button-press-event', this._buttonClicked.bind(this));
+        this._indicator.connect('button-press-event', this._buttonClicked.bind(this));
 
         this._setButtonIcon();
+        this._iconRank = this._getSettingsRank();
 
-        Main.panel.addToStatusArea(this.uuid, this._indicator, 2, "left");
+
+        Main.panel.addToStatusArea(this.uuid, this._indicator, this._iconRank, "right");
     }
 
     _createIcon(icon) {
@@ -70,6 +74,21 @@ export default class HideItems extends Extension {
         }catch (e){
             console.log("HideItems error: ",e)
         }
+    }
+
+    _getSettingsRank(){
+        const rightBoxItems = Main.panel._rightBox.get_children();
+        const rank = null;
+        rightBoxItems.map((item,index)=>{
+            if(item === Main.panel.statusArea.quickSettings.get_parent()){
+                rank = index;
+            }
+        })
+        console.log("index: ",rank)
+        return rank -1;
+    }
+
+    _buttonClicked(actor, event) {
         
     }
 }
