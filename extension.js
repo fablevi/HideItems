@@ -22,27 +22,17 @@ export default class HideItems extends Extension {
 
         this._createButton()
 
-        /*this._elementArray = [
-            this._indicator,
-            Main.panel.statusArea.quickSettings.get_parent()
-        ]*/
-
         //Update if a new button added or old removed from the panel
-        //Main.panel._rightBox.connect('notify::first-child', (object, data) => { console.log(data.name)})
-        //this._indicator.get_parent().connect('notify', (object, data) => { console.log('added', data.name, this._indicator.get_parent() == Main.panel._rightBox.get_parent()) })
-        //Main.panel._rightBox.connect('notify::child-removed', () => { console.log('removed') }) console.log('notify data', data.name, data.flags)
-    
-        Main.panel._rightBox.connect('actor-added', (object, data) => { console.log(data.name)})
+        //Main.panel._rightBox.connect('actor-added', (object, data) => { console.log(data.name)})
     }
 
     disable() {
-        this._indicator?.destroy();
         this._showIcon?.destroy();
-        this._hideIcon?.destroy();
-       
-        this._indicator = null;
         this._showIcon = null;
+        this._hideIcon?.destroy();
         this._hideIcon = null;
+        this._indicator?.destroy();
+        this._indicator = null;
 
         this._visibility = null;
         this._iconRank = null;
@@ -110,24 +100,15 @@ export default class HideItems extends Extension {
     }
 
     _changeIcon() {
-        this._deleteIndicator();
-        this._createButton();
-    }
-
-    _deleteIndicator() {
-        this._showIcon?.destroy();
-        this._showIcon = null;
-        this._hideIcon?.destroy();
-        this._hideIcon = null;
-        this._indicator?.destroy();
-        this._indicator = null;
+        this._setButtonIcon();
     }
 
     _hideOrShowItems() {
         var rightBoxItems = Main.panel._rightBox.get_children();
         console.log("items: ", rightBoxItems.toString())
+        console.log("indicator: ", this._indicator.toString())
         rightBoxItems.map((item, index) => {
-            if(item !== Main.panel.statusArea.quickSettings.get_parent()) {
+            if(item.child !== Main.panel.statusArea.quickSettings && item.child !== this._indicator) {
                     item.visible = this._visibility;
             }
         })
