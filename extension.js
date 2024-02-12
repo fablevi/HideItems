@@ -11,6 +11,8 @@ export default class HideItems extends Extension {
 
     enable() {
         console.log("Hide Items Extension started...");
+        this._indicator = null;
+        this._oldIndicator = null;
 
         //default visibility is true, but in the future i prepare it to state management
         this._settingsJSON = this._importJSONFile();
@@ -138,30 +140,7 @@ export default class HideItems extends Extension {
 
     //LISTENER
      _addedIconListener(container, actor) {
-        //console.log("this._checkRightBoxArray", this._checkRightBoxArray())
-        console.log("called listener HideItems")
-        console.log("Main.panel._rightBox.get_children()", Main.panel._rightBox.get_children().toString())
-        console.log('actor', actor.toString())
-        /*this._checkRightBoxArray() ?
-            this._newIconAdded()
-            : null;*/
-        this._setVisibilityOnListener();
-        
-    }
-
-    /*_checkRightBoxArray() {
-        var rightBoxItems = Main.panel._rightBox.get_children();
-        var isThere = false;
-        rightBoxItems.map((item, index) => {
-            if (item.child === this._oldIndicator) {
-                isThere = true;
-            }
-        })
-        return isThere;
-    }*/
-
-    _setVisibilityOnListener() {
-        this._hideOrShowItems()
+        this._hideOrShowItems();
     }
 
     //state management
