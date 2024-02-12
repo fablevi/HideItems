@@ -11,24 +11,25 @@ export default class HideItems extends Extension {
 
     enable() {
         console.log("Hide Items Extension started...");
-        this._indicator = null;
-        this._oldIndicator = null;
-
-        this._showIcon = null;
-        this._hideIcon = null;
 
         //default visibility is true, but in the future i prepare it to state management
-        this._visibility = false;
+        this._settingsJSON = this._importJSONFile();
+        this._visibility = this._setVisibiltyState();
+
         this._iconRank = 0;
 
         this._createButton()
         this._setIconVisibility();
+        
 
         //Update if a new button added or old removed from the panel
-        Main.panel._rightBox.connect('actor-added', (object, data) => { this._addedIconListener()})
+        this._connectHandlerID = Main.panel._rightBox.connect('actor-added', this._addedIconListener.bind(this));
     }
 
     disable() {
+        Main.panel._rightBox.disconnect(this._connectHandlerID);
+        this._changeBackVisibility();
+
         this._showIcon?.destroy();
         this._showIcon = null;
         this._hideIcon?.destroy();
@@ -39,6 +40,13 @@ export default class HideItems extends Extension {
         this._oldIndicator = null;
         this._visibility = null;
         this._iconRank = null;
+    }
+
+    _changeBackVisibility() {
+        var rightBoxItems = Main.panel._rightBox.get_children();
+        rightBoxItems.forEach((item, index) => {
+            item.visible = true
+        })
     }
 
     _createButton() {
@@ -100,6 +108,7 @@ export default class HideItems extends Extension {
     //CLICKED BUTTON
     _buttonClicked() {
         this._visibility = !this._visibility;
+        this._changeVisibilityState();
         this._hideOrShowItems();
         this._changeIcon();
     }
@@ -110,44 +119,114 @@ export default class HideItems extends Extension {
 
     _hideOrShowItems() {
         var rightBoxItems = Main.panel._rightBox.get_children();
-        console.log("items: ", rightBoxItems.toString())
-        console.log("indicator: ", this._indicator.toString())
+        //console.log("items: ", rightBoxItems.toString())
+        //console.log("indicator: ", this._indicator.toString())
         rightBoxItems.map((item, index) => {
-            if(item.child !== Main.panel.statusArea.quickSettings && item.child !== this._indicator) {
-                    item.visible = this._visibility;
+            if (item.child !== Main.panel.statusArea.quickSettings && item.child !== this._indicator) {
+                item.visible = this._visibility;
             }
         })
     }
 
     _setIconVisibility() {
-        this._visibility?
+        this._visibility ?
             null
             :
             this._hideOrShowItems();
-        this._changeIcon();;
+        this._changeIcon();
     }
 
     //LISTENER
-    _addedIconListener(){
-        console.log("this._checkRightBoxArray",this._checkRightBoxArray())
-        this._checkRightBoxArray()?
+     _addedIconListener(container, actor) {
+        //console.log("this._checkRightBoxArray", this._checkRightBoxArray())
+        console.log("called listener HideItems")
+        console.log("Main.panel._rightBox.get_children()", Main.panel._rightBox.get_children().toString())
+        console.log('actor', actor.toString())
+        /*this._checkRightBoxArray() ?
             this._newIconAdded()
-        :null;
+            : null;*/
+        this._setVisibilityOnListener();
+        
     }
 
-    _checkRightBoxArray(){
+    /*_checkRightBoxArray() {
         var rightBoxItems = Main.panel._rightBox.get_children();
         var isThere = false;
         rightBoxItems.map((item, index) => {
-            if(item.child === this._oldIndicator) {
+            if (item.child === this._oldIndicator) {
                 isThere = true;
             }
         })
         return isThere;
+    }*/
+
+    _setVisibilityOnListener() {
+        this._hideOrShowItems()
     }
 
-    _newIconAdded(){
+    //state management
+    _importJSONFile() {
+        let settingsJSONpath = `${this.path}/settings.json`
+        try {
+            let file = Gio.File.new_for_path(settingsJSONpath);
+            let [success, content] = file.load_contents(null);
 
+            if (success) {
+                let json = JSON.parse(content);
+                return json;
+            } else {
+                return null;
+            }
+        } catch (error) {
+            log('Hiba történt:', error.message);
+            return null;
+        }
     }
+
+    _updateJSONFile(newState, newVisibility) {
+        let settingsJSONpath = `${this.path}/settings.json`
+        try {
+            let file = Gio.File.new_for_path(settingsJSONpath);
+            let [success, content] = file.load_contents(null);
+
+            if (success) {
+                let json = JSON.parse(content);
+
+                // Frissítsd a "position" kulcs értékét az új pozícióval
+                json.state = newState;
+                json.visibility = newVisibility;
+
+                // JSON objektumot szöveggé alakítsuk
+                let updatedContent = JSON.stringify(json, null, 4);
+
+                // A fájl tartalmának frissítése
+                file.replace_contents(
+                    updatedContent,
+                    null,
+                    false,
+                    Gio.FileCreateFlags.REPLACE_DESTINATION,
+                    null
+                );
+            } else {
+            }
+        } catch (error) {
+            log('Hiba történt:', error.message);
+        }
+    }
+
+    _setVisibiltyState(){
+        if(this._settingsJSON.state){
+            return this._settingsJSON.visibility;
+        }else{
+            return true;
+        }
+    }
+    
+    _changeVisibilityState(){
+        if(this._settingsJSON.state){
+            this._updateJSONFile(this._settingsJSON.state,this._visibility);
+        }
+    }
+
 
 }
