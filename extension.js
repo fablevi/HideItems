@@ -1,8 +1,10 @@
 import { Extension } from 'resource:///org/gnome/shell/extensions/extension.js';
 import * as Main from 'resource:///org/gnome/shell/ui/main.js';
 import * as PanelMenu from 'resource:///org/gnome/shell/ui/panelMenu.js';
+import * as PopupMenu from 'resource:///org/gnome/shell/ui/popupMenu.js';
 import Gio from 'gi://Gio';
 import St from 'gi://St';
+import Clutter from 'gi://Clutter';
 
 export default class HideItems extends Extension {
     constructor(ext) {
@@ -14,6 +16,8 @@ export default class HideItems extends Extension {
         this._indicator = null;
         this._oldIndicator = null;
 
+        this._menu = null;
+
         //default visibility is true, but in the future i prepare it to state management
         this._settingsJSON = this._importJSONFile();
         this._visibility = this._setVisibiltyState();
@@ -22,10 +26,12 @@ export default class HideItems extends Extension {
 
         this._createButton()
         this._setIconVisibility();
-        
+
 
         //Update if a new button added or old removed from the panel
         this._connectHandlerID = Main.panel._rightBox.connect('actor-added', this._addedIconListener.bind(this));
+
+        this._addMenu()
     }
 
     disable() {
@@ -39,9 +45,28 @@ export default class HideItems extends Extension {
         this._indicator?.destroy();
         this._indicator = null;
 
+        this._menu?.destroy();
+        this._menu = null;
+
         this._oldIndicator = null;
         this._visibility = null;
         this._iconRank = null;
+    }
+
+    _addMenu() {
+        this._menu = new PopupMenu.PopupMenuItem('Settings',{
+
+        });
+        this._menu.connect('activate', () => {
+            try {
+                // this.#extension.openPreferences()
+                // Itt tudod elhelyezni a jobb gombhoz tartozó műveletet
+                log("Jobb gombra kattintva - Menü aktiválva");
+            } catch (e) {
+                logError(e);
+            }
+        });
+        this._indicator.menu.addMenuItem(this._menu);
     }
 
     _changeBackVisibility() {
@@ -108,11 +133,20 @@ export default class HideItems extends Extension {
     }
 
     //CLICKED BUTTON
-    _buttonClicked() {
-        this._visibility = !this._visibility;
-        this._changeVisibilityState();
-        this._hideOrShowItems();
-        this._changeIcon();
+    _buttonClicked(actor, event) {
+        if (event.get_button() === Clutter.BUTTON_PRIMARY) {
+            // Bal egérgomb lenyomva
+            console.log('Bal egérgomb lenyomva');
+            this._visibility = !this._visibility;
+            this._changeVisibilityState();
+            this._hideOrShowItems();
+            this._changeIcon();
+            this._indicator.menu.toggle();
+        } else if (event.get_button() === Clutter.BUTTON_SECONDARY) {
+            console.log('Jobb egérgomb lenyomva');
+        }
+
+
     }
 
     _changeIcon() {
@@ -139,7 +173,7 @@ export default class HideItems extends Extension {
     }
 
     //LISTENER
-     _addedIconListener(container, actor) {
+    _addedIconListener(container, actor) {
         this._hideOrShowItems();
     }
 
@@ -193,19 +227,13 @@ export default class HideItems extends Extension {
         }
     }
 
-    _setVisibiltyState(){
-        if(this._settingsJSON.state){
-            return this._settingsJSON.visibility;
-        }else{
-            return true;
-        }
-    }
-    
-    _changeVisibilityState(){
-        if(this._settingsJSON.state){
-            this._updateJSONFile(this._settingsJSON.state,this._visibility);
-        }
+    _setVisibiltyState() {
+        return this._settingsJSON.visibility;
     }
 
-
+    _changeVisibilityState() {
+        if (this._settingsJSON.state) {
+            this._updateJSONFile(this._settingsJSON.state, this._visibility);
+        }
+    }
 }
