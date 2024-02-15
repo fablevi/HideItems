@@ -30,3 +30,5 @@ This extension provide help for a clean interface on the top bar.
 
     $ reboot
      
+I tested on GNOME 45/ Ubuntu 23.10
+Probably it will work on every icon on the _rightBox item. I still not figure out what happens if some icon is appear on the right side of my extensions icon, but im working on it 🙂.
