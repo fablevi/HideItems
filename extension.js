@@ -17,7 +17,6 @@ export default class HideItems extends Extension {
 
         console.log("Hide Items Extension started...");
         this._indicator = null;
-        this._oldIndicator = null;
 
         this._menu = null;
 
@@ -41,19 +40,20 @@ export default class HideItems extends Extension {
         Main.panel._rightBox.disconnect(this._connectHandlerID);
         this._changeBackVisibility();
 
+        this._menu?.destroy();
+        this._menu = null;
+
         this._showIcon?.destroy();
         this._showIcon = null;
         this._hideIcon?.destroy();
         this._hideIcon = null;
         this._indicator?.destroy();
-        this._indicator = null;
+        this._indicator = null;        
 
-        this._menu?.destroy();
-        this._menu = null;
-
-        this._oldIndicator = null;
+        this._settingsJSON = null;
         this._visibility = null;
         this._iconRank = null;
+        this._connectHandlerID = null;
 
         this.settings=null;
     }
@@ -100,7 +100,6 @@ export default class HideItems extends Extension {
 
 
         Main.panel.addToStatusArea(this.uuid, this._indicator, this._iconRank, "right");
-        this._oldIndicator = this._indicator;
     }
 
     _createIcon(icon) {
