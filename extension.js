@@ -1,4 +1,4 @@
-import { Extension } from 'resource:///org/gnome/shell/extensions/extension.js';
+import { Extension, gettext as _ } from 'resource:///org/gnome/shell/extensions/extension.js';
 import * as Main from 'resource:///org/gnome/shell/ui/main.js';
 import * as PanelMenu from 'resource:///org/gnome/shell/ui/panelMenu.js';
 import * as PopupMenu from 'resource:///org/gnome/shell/ui/popupMenu.js';
@@ -12,6 +12,9 @@ export default class HideItems extends Extension {
     }
 
     enable() {
+        this.settings = this.getSettings();
+        this.settings.connect("changed::hideiconstate", this._changeState.bind(this))
+
         console.log("Hide Items Extension started...");
         this._indicator = null;
         this._oldIndicator = null;
@@ -51,6 +54,8 @@ export default class HideItems extends Extension {
         this._oldIndicator = null;
         this._visibility = null;
         this._iconRank = null;
+
+        this.settings=null;
     }
 
     _addMenu() {
@@ -62,6 +67,7 @@ export default class HideItems extends Extension {
                 // this.#extension.openPreferences()
                 // Itt tudod elhelyezni a jobb gombhoz tartozó műveletet
                 log("Jobb gombra kattintva - Menü aktiválva");
+                this.openPreferences();
             } catch (e) {
                 logError(e);
             }
@@ -232,8 +238,16 @@ export default class HideItems extends Extension {
     }
 
     _changeVisibilityState() {
-        if (this._settingsJSON.state) {
+        if (this._settingsJSON.state === "1") {
             this._updateJSONFile(this._settingsJSON.state, this._visibility);
         }
+    }
+
+    //gsettings change
+    _changeState(){
+        //this._updateJSONFile()
+        console.log("this.settings")
+        this._updateJSONFile(this.settings.get_string("hideiconstate"), this._visibility);
+        this._settingsJSON = this._importJSONFile();
     }
 }

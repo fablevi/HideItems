@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<schemalist>
+  <schema id="org.gnome.shell.extensions.HideItems" path="/org/gnome/shell/extensions/HideItems/">
+    <key name="hideiconstate" type="s">
+      <choices>
+        <choice value="0"/>
+        <choice value="1"/>
+      </choices> 
+      <default>"1"</default>
+      <summary>Save visibility value</summary>
+      <description>Save visibility value</description>
+      </key>
+  </schema>
+</schemalist>

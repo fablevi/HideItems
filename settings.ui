@@ -1,0 +1,30 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<!-- Created with Cambalache 0.16.0 -->
+<interface>
+  <!-- interface-name adw.ui -->
+  <requires lib="gtk" version="4.0"/>
+  <requires lib="libadwaita" version="1.4"/>
+  <object class="AdwPreferencesPage" id="settings_page">
+    <property name="valign">start</property>
+    <child>
+      <object class="AdwPreferencesGroup">
+        <property name="description">Configure the settings of the extension</property>
+        <property name="title">Config</property>
+        <child>
+          <object class="AdwComboRow" id="state">
+            <property name="model">
+              <object class="GtkStringList">
+                <items>
+                  <item>False</item>
+                  <item>True</item>
+                </items>
+              </object>
+            </property>
+            <property name="subtitle">Save the current state of the button</property>
+            <property name="title">State</property>
+          </object>
+        </child>
+      </object>
+    </child>
+  </object>
+</interface>

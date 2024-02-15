@@ -1,6 +1,7 @@
 {
   "name": "Hide Items",
   "description": "Hide everything on the right box exept this button and Settings window",
+  "settings-schema": "org.gnome.shell.extensions.HideItems",
   "uuid": "HideItems@fablevi.github.io",
   "shell-version": [
     "45"
