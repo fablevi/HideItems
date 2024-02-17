@@ -9,7 +9,7 @@
     <child>
       <object class="AdwPreferencesGroup">
         <property name="description">Configure the settings of the extension</property>
-        <property name="title">Config</property>
+        <property name="title">Configuration</property>
         <child>
           <object class="AdwComboRow" id="state">
             <property name="model">
@@ -21,7 +21,7 @@
               </object>
             </property>
             <property name="subtitle">Save the current state of the button</property>
-            <property name="title">State</property>
+            <property name="title">Save state</property>
           </object>
         </child>
       </object>
