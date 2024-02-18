@@ -40,7 +40,7 @@ export default class HideItemsPreferences extends ExtensionPreferences {
                 return null;
             }
         } catch (error) {
-            log('Hiba történt:', error.message);
+            console.log('Something wrong happened:', error.message);
             return null;
         }
     }

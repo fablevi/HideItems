@@ -37,6 +37,7 @@ export default class HideItems extends Extension {
     }
 
     disable() {
+        console.log("Hide Items Extension stopped...");
         Main.panel._rightBox.disconnect(this._connectHandlerID);
         this._changeBackVisibility();
 
@@ -66,10 +67,10 @@ export default class HideItems extends Extension {
             try {
                 // this.#extension.openPreferences()
                 // Itt tudod elhelyezni a jobb gombhoz tartozó műveletet
-                log("Jobb gombra kattintva - Menü aktiválva");
+                //console.log("Jobb gombra kattintva - Menü aktiválva");
                 this.openPreferences();
             } catch (e) {
-                logError(e);
+                console.log('error', e);
             }
         });
         this._indicator.menu.addMenuItem(this._menu);
@@ -133,7 +134,7 @@ export default class HideItems extends Extension {
                 rank = index;
             }
         })
-        console.log("index: ", rank)
+        //console.log("index: ", rank)
         return rank - 1;
     }
 
@@ -141,14 +142,14 @@ export default class HideItems extends Extension {
     _buttonClicked(actor, event) {
         if (event.get_button() === Clutter.BUTTON_PRIMARY) {
             // Bal egérgomb lenyomva
-            console.log('Bal egérgomb lenyomva');
+            //console.log('Bal egérgomb lenyomva');
             this._visibility = !this._visibility;
             this._changeVisibilityState();
             this._hideOrShowItems();
             this._changeIcon();
             this._indicator.menu.toggle();
         } else if (event.get_button() === Clutter.BUTTON_SECONDARY) {
-            console.log('Jobb egérgomb lenyomva');
+            //console.log('Jobb egérgomb lenyomva');
         }
 
 
@@ -196,7 +197,7 @@ export default class HideItems extends Extension {
                 return null;
             }
         } catch (error) {
-            log('Hiba történt:', error.message);
+            //console.log('Hiba történt:', error.message);
             return null;
         }
     }
@@ -228,7 +229,7 @@ export default class HideItems extends Extension {
             } else {
             }
         } catch (error) {
-            log('Hiba történt:', error.message);
+            console.log('Something wrong happened:', error.message);
         }
     }
 
@@ -245,7 +246,7 @@ export default class HideItems extends Extension {
     //gsettings change
     _changeState(){
         //this._updateJSONFile()
-        console.log("this.settings")
+        //console.log("this.settings")
         this._updateJSONFile(this.settings.get_string("hideiconstate"), this._visibility);
         this._settingsJSON = this._importJSONFile();
     }
