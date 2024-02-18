@@ -11,7 +11,7 @@ This extension provide help for a clean interface on the top bar.
 #Install
 
   ## 1. method
-  Install from gnome extension wensite: [NULL](google.com)  
+  Install from gnome extension website: [GNOME extensions](https://extensions.gnome.org/extension/6771/hide-items/)  
   ## 2. method
   1. Download from source
 
