@@ -8,7 +8,7 @@ This is a GNOME extension from GNOME 45.
 The idea is came from MacOS, [Hidden](https://github.com/dwarvesf/hidden) extension.
 This extension provide help for a clean interface on the top bar.
 
-#Install
+# Install
 
   ## 1. method
   Install from gnome extension website: [GNOME extensions](https://extensions.gnome.org/extension/6771/hide-items/)  
