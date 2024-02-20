@@ -1,4 +1,5 @@
 {
     "state": "1",
-    "visibility": true
+    "visibility": false,
+    "defaultVisibility": "true"
 }
