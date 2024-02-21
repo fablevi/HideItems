@@ -6,6 +6,8 @@ import Gio from 'gi://Gio';
 import St from 'gi://St';
 import Clutter from 'gi://Clutter';
 
+import * as Config from 'resource:///org/gnome/shell/misc/config.js';
+
 export default class HideItems extends Extension {
     constructor(ext) {
         super(ext);
@@ -31,7 +33,10 @@ export default class HideItems extends Extension {
 
 
         //Update if a new button added or old removed from the panel
-        this._connectHandlerID = Main.panel._rightBox.connect('actor-added', this._addedIconListener.bind(this));
+        const shellVersion = parseFloat(Config.PACKAGE_VERSION).toString().slice(0,2);
+        console.log(shellVersion)
+        let signalName = (shellVersion == 45) ? 'actor-added' : /* 46 */ 'child-added';
+        this._connectHandlerID = Main.panel._rightBox.connect(signalName, this._addedIconListener.bind(this));
 
         this._addMenu()
     }
