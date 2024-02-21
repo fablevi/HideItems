@@ -234,7 +234,11 @@ export default class HideItems extends Extension {
     }
 
     _setVisibiltyState() {
-        return this._settingsJSON.visibility;
+        if(this._settingsJSON.state === "1") {  
+            return this._settingsJSON.visibility;
+        }else{
+            return this._settingsJSON.defaultVisibility;
+        }
     }
 
     _changeVisibilityState() {

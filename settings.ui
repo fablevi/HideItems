@@ -15,13 +15,27 @@
             <property name="model">
               <object class="GtkStringList">
                 <items>
-                  <item>False</item>
-                  <item>True</item>
+                  <item>Unsave</item>
+                  <item>Save</item>
                 </items>
               </object>
             </property>
             <property name="subtitle">Save the current state of the button</property>
             <property name="title">Save state</property>
+          </object>
+        </child>
+        <child>
+          <object class="AdwComboRow" id="defualtvisibility">
+            <property name="model">
+              <object class="GtkStringList">
+                <items>
+                  <item>Visibile</item>
+                  <item>Hidden</item>
+                </items>
+              </object>
+            </property>
+            <property name="subtitle">If state is unsaved, then this will be the default visibility on start</property>
+            <property name="title">Set default visibility on start</property>
           </object>
         </child>
       </object>

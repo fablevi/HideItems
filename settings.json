@@ -1,5 +1,5 @@
 {
     "state": "1",
-    "visibility": false,
-    "defaultVisibility": "true"
+    "visibility": true,
+    "defaultVisibility": false
 }
