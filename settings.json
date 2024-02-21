@@ -1,5 +1,6 @@
 {
-    "state": "1",
+    "state": "0",
     "visibility": true,
-    "defaultVisibility": false
+    "defaultVisibility": false,
+    "visibleChildren": {}
 }
