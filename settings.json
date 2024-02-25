@@ -2,5 +2,7 @@
     "state": "0",
     "visibility": true,
     "defaultVisibility": false,
-    "visibleChildren": []
+    "visibleChildren": [
+        "Gjs_runcat_kolesnikov_se_indicator_RunCatIndicator"
+    ]
 }

@@ -82,6 +82,7 @@ export default class HideItems extends Extension {
         this._indicator.menu.addMenuItem(this._menu);
     }
 
+    //call when disabled()
     _changeBackVisibility() {
         var rightBoxItems = Main.panel._rightBox.get_children();
         rightBoxItems.forEach((item, index) => {
@@ -172,10 +173,25 @@ export default class HideItems extends Extension {
         //console.log("items: ", rightBoxItems.toString())
         //console.log("indicator: ", this._indicator.toString())
         rightBoxItems.map((item, index) => {
-            if (item.child !== Main.panel.statusArea.quickSettings && item.child !== this._indicator) {
+            if (item.child !== Main.panel.statusArea.quickSettings && item.child !== this._indicator && this._isVisibleChildrenInIt(item.child)) {
                 item.visible = this._visibility;
             }
         })
+    }
+
+    _isVisibleChildrenInIt(item){
+        var boolean = true;
+        var childrenName = null;
+        if(item.accessible_name !== ""){
+            childrenName = item.accessible_name;
+        }else{
+            childrenName = item.constructor.$gtype.name
+        }
+        this._settingsJSON.visibleChildren.map((item,index)=>{
+            item == childrenName ? boolean = false : null;
+        })
+
+        return boolean;
     }
 
     _setIconVisibility() {
