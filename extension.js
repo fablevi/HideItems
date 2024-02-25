@@ -37,7 +37,7 @@ export default class HideItems extends Extension {
         console.log(shellVersion)
         let signalName = (shellVersion == 45) ? 'actor' : /* 46 */ 'child';
         this._connectAddedHandlerID = Main.panel._rightBox.connect(signalName + "-added", this._addedIconListener.bind(this));
-        this._connectRemovedHandlerID = Main.panel._rightBox.connect(signalName + "-removed", this._addedIconListener.bind(this));
+        this._connectRemovedHandlerID = Main.panel._rightBox.connect(signalName + "-removed", this._removedIconListener.bind(this));
     }
 
     disable() {
@@ -193,6 +193,10 @@ export default class HideItems extends Extension {
         this._getEveryChildrenFrom_RightBox()
     }
 
+    _removedIconListener(container, actor) {
+        this._getEveryChildrenFrom_RightBox()
+    }
+
     //state management
     _importJSONFile() {
         let settingsJSONpath = `${this.path}/settings.json`
@@ -309,5 +313,9 @@ export default class HideItems extends Extension {
         })
         console.log(childrenNames);
         return childrenNames;
+    }
+
+    _sendItemsToPrefs(childrenNames){
+        
     }
 }

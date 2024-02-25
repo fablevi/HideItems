@@ -10,5 +10,13 @@
       <summary>Save visibility value</summary>
       <description>Save visibility value</description>
       </key>
+      <key name="allindicator" type="as">
+            <description>All top panel indicator</description>
+            <default>[]</default>
+      </key>
+      <key name="nothiddenindicator" type="as">
+            <description>All not hidden indicator</description>
+            <default>[]</default>
+      </key>
   </schema>
 </schemalist>
