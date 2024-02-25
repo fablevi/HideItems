@@ -190,11 +190,11 @@ export default class HideItems extends Extension {
     _addedIconListener(container, actor) {
         this._hideOrShowItems();
         //change the icon index
-        this._getEveryChildrenFrom_RightBox()
+        this._sendItemsToPrefs(this._getEveryChildrenFrom_RightBox())
     }
 
     _removedIconListener(container, actor) {
-        this._getEveryChildrenFrom_RightBox()
+        this._sendItemsToPrefs(this._getEveryChildrenFrom_RightBox())
     }
 
     //state management
@@ -316,6 +316,6 @@ export default class HideItems extends Extension {
     }
 
     _sendItemsToPrefs(childrenNames){
-        
+        this.settings.set_strv('allindicator',childrenNames)
     }
 }

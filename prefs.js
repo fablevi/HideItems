@@ -37,6 +37,9 @@ export default class HideItemsPreferences extends ExtensionPreferences {
 
         window.add(builder.get_object('settings_page'));
 
+        console.log(this._getAllIndicator(settings))
+        this._getShownIndicator(json)
+
     }
 
     _importJSONFile() {
@@ -128,5 +131,43 @@ export default class HideItemsPreferences extends ExtensionPreferences {
         } catch (error) {
             console.log('Something wrong happened:', error.message);
         }
+    }
+
+    _updateVisibleIndicator(newVisibility) {
+        let settingsJSONpath = `${this.path}/settings.json`
+        try {
+            let file = Gio.File.new_for_path(settingsJSONpath);
+            let [success, content] = file.load_contents(null);
+
+            if (success) {
+                let json = JSON.parse(content);
+
+                // Frissítsd a "position" kulcs értékét az új pozícióval
+                json.visibleChildren = newVisibility;
+
+                // JSON objektumot szöveggé alakítsuk
+                let updatedContent = JSON.stringify(json, null, 4);
+
+                // A fájl tartalmának frissítése
+                file.replace_contents(
+                    updatedContent,
+                    null,
+                    false,
+                    Gio.FileCreateFlags.REPLACE_DESTINATION,
+                    null
+                );
+            } else {
+            }
+        } catch (error) {
+            console.log('Something wrong happened:', error.message);
+        }
+    }
+
+    _getAllIndicator(settings){
+        return settings.get_strv("allindicator")
+    }
+
+    _getShownIndicator(json){
+        console.log(json.visibleChildren)
     }
 }
