@@ -1,5 +1,6 @@
 import Gio from 'gi://Gio';
 import Gtk from 'gi://Gtk';
+
 import GLib from 'gi://GLib';
 import Gdk from 'gi://Gdk';
 
@@ -172,34 +173,53 @@ export default class HideItemsPreferences extends ExtensionPreferences {
 
     _generateButtons(json, allindicator, parentObject) {
         /*
-        const cssProvider = new Gtk.CssProvider();
-        cssProvider.load_from_path(GLib.filename_to_uri(`${this.path}`, null));
-        const styleContext = button.get_style_context();
-        styleContext.add_provider(cssProvider, Gtk.STYLE_PROVIDER_PRIORITY_APPLICATION);
+            const cssProvider = new Gtk.CssProvider();
+            cssProvider.load_from_path(`${this.path}/stylesheet.css`);
+            const styleContext = button.get_style_context();
+            styleContext.add_provider(cssProvider, Gtk.STYLE_PROVIDER_PRIORITY_APPLICATION);
         */
         console.log(json.visibleChildren)
+
+        let visibilityIconFront = '🔍️'
+        let visibilityIconBack = '🔎'
+
         allindicator.map((item, index) => {
 
             const marginTopBottm = 2;
             const marginLeftRight = 50;
 
             let button = new Gtk.Button({
-                label: item,
                 margin_top: marginTopBottm,    // Opcionális: margó a doboz tetején
                 margin_bottom: marginTopBottm, // Opcionális: margó a doboz alján
                 margin_start: marginLeftRight,  // Opcionális: margó a doboz bal oldalán
-                margin_end: marginLeftRight ,    // Opcionális: margó a doboz jobb oldalán
-                name: 'shownIconButton'
+                margin_end: marginLeftRight,    // Opcionális: margó a doboz jobb oldalán
+                name: item
             })
+
+            let shownLabelBoolean = false;
+            json.visibleChildren.map((visItem, index) => {
+                if (visItem == item) {
+                    shownLabelBoolean = true;
+                }
+            })
+
+            shownLabelBoolean ? button.set_label(visibilityIconFront + ' ' + item + ' ' +  visibilityIconBack): button.set_label(item);
 
             button.connect("clicked", (button) => {
                 print("A gombra kattintottak!: ", button.get_label());
-                
+                this._changeButtonLabel(button);
             });
+
 
             parentObject.add(button)
         })
+    }
 
-
+    _changeButtonLabel(button){
+        if(button.get_label() != button.get_name()){
+            button.set_label(button.get_name())
+        }else{
+            button.set_label(visibilityIconFront +'' + button.get_name() +'' + visibilityIconBack)
+        }
     }
 }

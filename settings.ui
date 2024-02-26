@@ -43,7 +43,7 @@
     <child>
       <object class="AdwPreferencesGroup" id="visiblityIcons">
         <property name="description">Configure the visibility of the icons in the right side of the top bar</property>
-        <property name="title">Visibile icons</property>
+        <property name="title">EXPERIMENTAL!!!</property>
       </object>
     </child>
   </object>
