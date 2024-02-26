@@ -40,5 +40,11 @@
         </child>
       </object>
     </child>
+    <child>
+      <object class="AdwPreferencesGroup" id="visiblityIcons">
+        <property name="description">Configure the visibility of the icons in the right side of the top bar</property>
+        <property name="title">Visibile icons</property>
+      </object>
+    </child>
   </object>
 </interface>

@@ -1,6 +1,9 @@
 import Gio from 'gi://Gio';
 import Gtk from 'gi://Gtk';
-import {ExtensionPreferences,gettext as _ } from 'resource:///org/gnome/Shell/Extensions/js/extensions/prefs.js';
+import GLib from 'gi://GLib';
+import Gdk from 'gi://Gdk';
+
+import { ExtensionPreferences, gettext as _ } from 'resource:///org/gnome/Shell/Extensions/js/extensions/prefs.js';
 
 export default class HideItemsPreferences extends ExtensionPreferences {
     fillPreferencesWindow(window) {
@@ -11,34 +14,34 @@ export default class HideItemsPreferences extends ExtensionPreferences {
         builder.set_translation_domain(this.metadata['gettext-domain']);
         builder.add_from_file(this.dir.get_child('settings.ui').get_path());
 
-        let comboRowState = builder.get_object('state'); 
+        let comboRowState = builder.get_object('state');
 
-        if(json.state.toString() == "0"){
+        if (json.state.toString() == "0") {
             comboRowState.set_selected(0);
-        }else{
-            comboRowState.set_selected(1);  
+        } else {
+            comboRowState.set_selected(1);
         }
 
-        comboRowState.connect("notify::selected-item",()=>{
+        comboRowState.connect("notify::selected-item", () => {
             this._comboRowStateChange(comboRowState, settings)
         })
 
-        let comboRowDefVisibility = builder.get_object('defualtvisibility'); 
+        let comboRowDefVisibility = builder.get_object('defualtvisibility');
 
-        if(json.defaultVisibility.toString() == "true"){
+        if (json.defaultVisibility.toString() == "true") {
             comboRowDefVisibility.set_selected(0);
-        }else{
-            comboRowDefVisibility.set_selected(1);  
+        } else {
+            comboRowDefVisibility.set_selected(1);
         }
 
-        comboRowDefVisibility.connect("notify::selected-item",()=>{
+        comboRowDefVisibility.connect("notify::selected-item", () => {
             this._comboRowDefVisibilityUpdateJSON(comboRowDefVisibility)
         })
 
         window.add(builder.get_object('settings_page'));
 
         console.log(this._getAllIndicator(settings))
-        this._getShownIndicator(json)
+        this._generateButtons(json, this._getAllIndicator(settings), builder.get_object('visiblityIcons'))
 
     }
 
@@ -60,32 +63,32 @@ export default class HideItemsPreferences extends ExtensionPreferences {
         }
     }
 
-    _comboRowStateChange(pos, settings){
-        console.log('_comboRowStateChange',pos.selected)
-        try{
-            switch(pos.get_selected()){
+    _comboRowStateChange(pos, settings) {
+        console.log('_comboRowStateChange', pos.selected)
+        try {
+            switch (pos.get_selected()) {
                 case 0:
-                    settings.set_string("hideiconstate","0");
+                    settings.set_string("hideiconstate", "0");
                     console.log(settings.get_string("hideiconstate"))
                     break;
                 case 1:
-                    settings.set_string("hideiconstate","1");
+                    settings.set_string("hideiconstate", "1");
                     console.log(settings.get_string("hideiconstate"))
                     break;
                 default:
                     console.log("nem mentek!!")
                     break;
             }
-        }catch(error){
-            console.log('error',error);
+        } catch (error) {
+            console.log('error', error);
         }
-        
+
     }
 
-    _comboRowDefVisibilityUpdateJSON(pos){
-        console.log('_comboRowDefVisibilityUpdateJSON',pos.selected)
-        try{
-            switch(pos.get_selected()){
+    _comboRowDefVisibilityUpdateJSON(pos) {
+        console.log('_comboRowDefVisibilityUpdateJSON', pos.selected)
+        try {
+            switch (pos.get_selected()) {
                 case 0:
                     this._updateJSONFile(true)
                     console.log("Visibile")
@@ -98,8 +101,8 @@ export default class HideItemsPreferences extends ExtensionPreferences {
                     console.log("nem mentek!!")
                     break;
             }
-        }catch(error){
-            console.log('error',error);
+        } catch (error) {
+            console.log('error', error);
         }
     }
 
@@ -163,11 +166,40 @@ export default class HideItemsPreferences extends ExtensionPreferences {
         }
     }
 
-    _getAllIndicator(settings){
+    _getAllIndicator(settings) {
         return settings.get_strv("allindicator")
     }
 
-    _getShownIndicator(json){
+    _generateButtons(json, allindicator, parentObject) {
+        /*
+        const cssProvider = new Gtk.CssProvider();
+        cssProvider.load_from_path(GLib.filename_to_uri(`${this.path}`, null));
+        const styleContext = button.get_style_context();
+        styleContext.add_provider(cssProvider, Gtk.STYLE_PROVIDER_PRIORITY_APPLICATION);
+        */
         console.log(json.visibleChildren)
+        allindicator.map((item, index) => {
+
+            const marginTopBottm = 2;
+            const marginLeftRight = 50;
+
+            let button = new Gtk.Button({
+                label: item,
+                margin_top: marginTopBottm,    // Opcionális: margó a doboz tetején
+                margin_bottom: marginTopBottm, // Opcionális: margó a doboz alján
+                margin_start: marginLeftRight,  // Opcionális: margó a doboz bal oldalán
+                margin_end: marginLeftRight ,    // Opcionális: margó a doboz jobb oldalán
+                name: 'shownIconButton'
+            })
+
+            button.connect("clicked", (button) => {
+                print("A gombra kattintottak!: ", button.get_label());
+                
+            });
+
+            parentObject.add(button)
+        })
+
+
     }
 }

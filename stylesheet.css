@@ -1,1 +1,8 @@
 /* Add your custom extension styling here */
+window{
+    background-color: aqua;
+}
+
+.shownIconButton{
+    background-color: rgb(255, 0, 0);
+}
