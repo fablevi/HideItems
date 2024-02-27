@@ -172,12 +172,6 @@ export default class HideItemsPreferences extends ExtensionPreferences {
     }
 
     _generateButtons(json, allindicator, parentObject) {
-        /*
-            const cssProvider = new Gtk.CssProvider();
-            cssProvider.load_from_path(`${this.path}/stylesheet.css`);
-            const styleContext = button.get_style_context();
-            styleContext.add_provider(cssProvider, Gtk.STYLE_PROVIDER_PRIORITY_APPLICATION);
-        */
         console.log(json.visibleChildren)
 
         let visibilityIconFront = '🔍️'
@@ -203,11 +197,12 @@ export default class HideItemsPreferences extends ExtensionPreferences {
                 }
             })
 
-            shownLabelBoolean ? button.set_label(visibilityIconFront + ' ' + item + ' ' +  visibilityIconBack): button.set_label(item);
+            //set label
+            shownLabelBoolean ? button.set_label(visibilityIconFront + ' ' + item + ' ' + visibilityIconBack) : button.set_label(item);
 
             button.connect("clicked", (button) => {
                 print("A gombra kattintottak!: ", button.get_label());
-                this._changeButtonLabel(button);
+                this._changeButtonLabel(button, visibilityIconFront, visibilityIconBack, json);
             });
 
 
@@ -215,11 +210,20 @@ export default class HideItemsPreferences extends ExtensionPreferences {
         })
     }
 
-    _changeButtonLabel(button){
-        if(button.get_label() != button.get_name()){
+    //onclick
+    _changeButtonLabel(button, visibilityIconFront, visibilityIconBack, json) {
+        if (button.get_label() != button.get_name()) {
             button.set_label(button.get_name())
-        }else{
-            button.set_label(visibilityIconFront +'' + button.get_name() +'' + visibilityIconBack)
+            let array = json.visibleChildren.filter(function (item) {
+                console.log(item, button.get_name())
+                return item !== button.get_name()
+            })
+            json.visibleChildren.pop()
+            json.visibleChildren = array
+        } else {
+            button.set_label(visibilityIconFront + '' + button.get_name() + '' + visibilityIconBack)
+            json.visibleChildren.push(button.get_name())
         }
+        this._updateVisibleIndicator(json.visibleChildren)
     }
 }

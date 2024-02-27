@@ -3,6 +3,8 @@
     "visibility": true,
     "defaultVisibility": false,
     "visibleChildren": [
-        "Gjs_runcat_kolesnikov_se_indicator_RunCatIndicator"
+        "Gjs_runcat_kolesnikov_se_indicator_RunCatIndicator",
+        "Debian Linux Updates Indicator",
+        "Looking Glass Button Indicator"
     ]
 }
