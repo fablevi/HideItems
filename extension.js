@@ -16,6 +16,7 @@ export default class HideItems extends Extension {
     enable() {
         this.settings = this.getSettings();
         this.settings.connect("changed::hideiconstate", this._changeState.bind(this))
+        this.settings.connect("changed::nothiddenindicator", this._settingsHiddenIndicatorStateChange.bind(this))
 
         console.log("Hide Items Extension started...");
         this._indicator = null;
@@ -170,8 +171,6 @@ export default class HideItems extends Extension {
 
     _hideOrShowItems() {
         var rightBoxItems = Main.panel._rightBox.get_children();
-        //console.log("items: ", rightBoxItems.toString())
-        //console.log("indicator: ", this._indicator.toString())
         rightBoxItems.map((item, index) => {
             if (item.child !== Main.panel.statusArea.quickSettings && item.child !== this._indicator && this._isVisibleChildrenInIt(item.child)) {
                 item.visible = this._visibility;
@@ -333,5 +332,19 @@ export default class HideItems extends Extension {
 
     _sendItemsToPrefs(childrenNames){
         this.settings.set_strv('allindicator',childrenNames)
+    }
+
+    //iconHideOrVisibleStateChange
+    _settingsHiddenIndicatorStateChange(){
+        this._settingsJSON = this._importJSONFile();
+        
+        var rightBoxItems = Main.panel._rightBox.get_children();
+        rightBoxItems.map((item, index) => {
+            if (item.child !== Main.panel.statusArea.quickSettings && item.child !== this._indicator && this._isVisibleChildrenInIt(item.child)) {
+                item.visible = this._visibility;
+            }else{
+                item.visible = true;
+            }
+        })
     }
 }

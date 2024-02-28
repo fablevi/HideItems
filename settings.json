@@ -4,6 +4,7 @@
     "defaultVisibility": false,
     "visibleChildren": [
         "Debian Linux Updates Indicator",
+        "Pano Indicator",
         "Looking Glass Button Indicator"
     ]
 }
