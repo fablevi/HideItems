@@ -1,9 +1,6 @@
 import Gio from 'gi://Gio';
 import Gtk from 'gi://Gtk';
 
-import GLib from 'gi://GLib';
-import Gdk from 'gi://Gdk';
-
 import { ExtensionPreferences, gettext as _ } from 'resource:///org/gnome/Shell/Extensions/js/extensions/prefs.js';
 
 export default class HideItemsPreferences extends ExtensionPreferences {
@@ -42,8 +39,8 @@ export default class HideItemsPreferences extends ExtensionPreferences {
         window.add(builder.get_object('settings_page'));
 
         console.log(this._getAllIndicator(settings))
-        this._generateButtons(json, this._getAllIndicator(settings), builder.get_object('visiblityIcons'), settings)
-
+        this._generateButtons(json, this._getAllIndicator(settings), builder.get_object('visiblityIcons'), settings);
+        this._generateClearButton(json, this._getAllIndicator(settings), builder.get_object('extraData'), settings);
     }
 
     _importJSONFile() {
@@ -179,12 +176,12 @@ export default class HideItemsPreferences extends ExtensionPreferences {
 
         allindicator.map((item, index) => {
 
-            const marginTopBottm = 2;
+            const marginTopBottom = 2;
             const marginLeftRight = 50;
 
             let button = new Gtk.Button({
-                margin_top: marginTopBottm,    // Opcionális: margó a doboz tetején
-                margin_bottom: marginTopBottm, // Opcionális: margó a doboz alján
+                margin_top: marginTopBottom,    // Opcionális: margó a doboz tetején
+                margin_bottom: marginTopBottom, // Opcionális: margó a doboz alján
                 margin_start: marginLeftRight,  // Opcionális: margó a doboz bal oldalán
                 margin_end: marginLeftRight,    // Opcionális: margó a doboz jobb oldalán
                 name: item
@@ -210,6 +207,29 @@ export default class HideItemsPreferences extends ExtensionPreferences {
         })
     }
 
+    _generateClearButton(json, allindicator, parentObject, settings) {
+        const marginTopBottom = 2;
+        const marginLeft = 50;
+        const marginRight = 300;
+
+        let button = new Gtk.Button({
+            margin_top: marginTopBottom,    // Opcionális: margó a doboz tetején
+            margin_bottom: marginTopBottom, // Opcionális: margó a doboz alján
+            margin_start: marginLeft,  // Opcionális: margó a doboz bal oldalán
+            margin_end: marginRight,    // Opcionális: margó a doboz jobb oldalán
+            name: "clearerButton"
+        })
+
+        button.set_label("Clear data from local file")
+
+        button.connect("clicked", (button) => {
+            print("A gombra kattintottak!: ", button.get_label());
+            this._clearLocalData(button, allindicator, json, settings);
+        });
+
+        parentObject.add(button)
+    }
+
     //onclick
     _changeButtonLabel(button, visibilityIconFront, visibilityIconBack, json, settings) {
         if (button.get_label() != button.get_name()) {
@@ -224,6 +244,16 @@ export default class HideItemsPreferences extends ExtensionPreferences {
             button.set_label(visibilityIconFront + '' + button.get_name() + '' + visibilityIconBack)
             json.visibleChildren.push(button.get_name())
         }
+        this._updateVisibleIndicator(json.visibleChildren)
+        settings.set_strv("nothiddenindicator", json.visibleChildren);
+        console.log("nothiddenindicator", json.visibleChildren, settings.get_strv("nothiddenindicator"))
+    }
+
+    _clearLocalData(button, allindicator, json, settings) {
+        //const filteredArray = array1.filter(value => array2.includes(value));
+        const newArray = json.visibleChildren.filter((item) => { return allindicator.includes(item) });
+        json.visibleChildren.pop();
+        json.visibleChildren = newArray;
         this._updateVisibleIndicator(json.visibleChildren)
         settings.set_strv("nothiddenindicator", json.visibleChildren);
         console.log("nothiddenindicator", json.visibleChildren, settings.get_strv("nothiddenindicator"))

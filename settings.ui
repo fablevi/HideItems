@@ -46,5 +46,11 @@
         <property name="title">EXPERIMENTAL!!!</property>
       </object>
     </child>
+     <child>
+      <object class="AdwPreferencesGroup" id="extraData">
+        <property name="description">Delete old indicator data from local files. This could be improve efficiency!</property>
+        <property name="title">EXPERIMENTAL!!! On clikced instantly delete data. Don't ask to your approval!</property>
+      </object>
+    </child>
   </object>
 </interface>
