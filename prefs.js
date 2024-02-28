@@ -42,7 +42,7 @@ export default class HideItemsPreferences extends ExtensionPreferences {
         window.add(builder.get_object('settings_page'));
 
         console.log(this._getAllIndicator(settings))
-        this._generateButtons(json, this._getAllIndicator(settings), builder.get_object('visiblityIcons'))
+        this._generateButtons(json, this._getAllIndicator(settings), builder.get_object('visiblityIcons'), settings)
 
     }
 
@@ -171,7 +171,7 @@ export default class HideItemsPreferences extends ExtensionPreferences {
         return settings.get_strv("allindicator")
     }
 
-    _generateButtons(json, allindicator, parentObject) {
+    _generateButtons(json, allindicator, parentObject, settings) {
         console.log(json.visibleChildren)
 
         let visibilityIconFront = '🔍️'
@@ -202,7 +202,7 @@ export default class HideItemsPreferences extends ExtensionPreferences {
 
             button.connect("clicked", (button) => {
                 print("A gombra kattintottak!: ", button.get_label());
-                this._changeButtonLabel(button, visibilityIconFront, visibilityIconBack, json);
+                this._changeButtonLabel(button, visibilityIconFront, visibilityIconBack, json, settings);
             });
 
 
@@ -211,7 +211,7 @@ export default class HideItemsPreferences extends ExtensionPreferences {
     }
 
     //onclick
-    _changeButtonLabel(button, visibilityIconFront, visibilityIconBack, json) {
+    _changeButtonLabel(button, visibilityIconFront, visibilityIconBack, json, settings) {
         if (button.get_label() != button.get_name()) {
             button.set_label(button.get_name())
             let array = json.visibleChildren.filter(function (item) {
@@ -225,5 +225,7 @@ export default class HideItemsPreferences extends ExtensionPreferences {
             json.visibleChildren.push(button.get_name())
         }
         this._updateVisibleIndicator(json.visibleChildren)
+        settings.set_strv("nothiddenindicator", json.visibleChildren);
+        console.log("nothiddenindicator", json.visibleChildren, settings.get_strv("nothiddenindicator"))
     }
 }
