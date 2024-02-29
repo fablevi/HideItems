@@ -145,7 +145,7 @@ export default class HideItems extends Extension {
             }
         })
         //console.log("index: ", rank)
-        return rank - 1;
+        return rank;
     }
 
     //CLICKED BUTTON

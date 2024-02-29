@@ -171,13 +171,15 @@ export default class HideItemsPreferences extends ExtensionPreferences {
     _generateButtons(json, allindicator, parentObject, settings) {
         console.log(json.visibleChildren)
 
-        let visibilityIconFront = '🔍️'
-        let visibilityIconBack = '🔎'
+        let buttonsArray = [];
+
+        let visibilityIconFront = '⚡️🔥'
+        let visibilityIconBack = '🔥⚡️'
 
         allindicator.map((item, index) => {
 
             const marginTopBottom = 2;
-            const marginLeftRight = 50;
+            const marginLeftRight = 35;
 
             let button = new Gtk.Button({
                 margin_top: marginTopBottom,    // Opcionális: margó a doboz tetején
@@ -202,15 +204,39 @@ export default class HideItemsPreferences extends ExtensionPreferences {
                 this._changeButtonLabel(button, visibilityIconFront, visibilityIconBack, json, settings);
             });
 
+            buttonsArray.push(button)
 
             parentObject.add(button)
         })
+
+        const resetMarginV = 60;
+        const resetMarginLeft = 25;
+        const resetMarginRidht = 200;  
+
+        let resetButton  = new Gtk.Button({
+            margin_top: resetMarginV,    // Opcionális: margó a doboz tetején
+            margin_bottom: resetMarginV / 4, // Opcionális: margó a doboz alján
+            margin_start: resetMarginLeft,  // Opcionális: margó a doboz bal oldalán
+            margin_end: resetMarginRidht,    // Opcionális: margó a doboz jobb oldalán
+            name: "resetButton"
+        })
+
+        resetButton.set_label('♻️' + " Set default the shown items " + '♻️') 
+
+        resetButton.connect("clicked", (button) => {
+            print("A gombra kattintottak!: ", button.get_label());
+            this._resetData(button, allindicator, json, settings, parentObject, buttonsArray);
+        });
+
+        buttonsArray.push(resetButton)
+
+        parentObject.add(resetButton)
     }
 
     _generateClearButton(json, allindicator, parentObject, settings) {
-        const marginTopBottom = 2;
-        const marginLeft = 50;
-        const marginRight = 300;
+        const marginTopBottom = 30;
+        const marginLeft = 60;
+        const marginRight = 60;
 
         let button = new Gtk.Button({
             margin_top: marginTopBottom,    // Opcionális: margó a doboz tetején
@@ -220,7 +246,7 @@ export default class HideItemsPreferences extends ExtensionPreferences {
             name: "clearerButton"
         })
 
-        button.set_label("Clear data from local file")
+        button.set_label('⚠️' + " Clear data from local file " + '⚠️') 
 
         //reactive json.visibleChildren.filter((item) => { return allindicator.includes(item) });
         this._setDisbale(json, allindicator, button)
@@ -241,7 +267,7 @@ export default class HideItemsPreferences extends ExtensionPreferences {
                 console.log(item, button.get_name())
                 return item !== button.get_name()
             })
-            json.visibleChildren.pop()
+            json.visibleChildren.pop() //?
             json.visibleChildren = array
         } else {
             button.set_label(visibilityIconFront + '' + button.get_name() + '' + visibilityIconBack)
@@ -255,7 +281,7 @@ export default class HideItemsPreferences extends ExtensionPreferences {
     _clearLocalData(button, allindicator, json, settings) {
         //const filteredArray = array1.filter(value => array2.includes(value));
         const newArray = json.visibleChildren.filter((item) => { return allindicator.includes(item) });
-        json.visibleChildren.pop();
+        json.visibleChildren.pop(); //?
         json.visibleChildren = newArray;
         this._updateVisibleIndicator(json.visibleChildren)
         settings.set_strv("nothiddenindicator", json.visibleChildren);
@@ -269,11 +295,24 @@ export default class HideItemsPreferences extends ExtensionPreferences {
 
         if (arrayIntersection.length == 0){
             button.set_sensitive(false)
-            button.set_label("All unnecessarily data is cleared")
+            button.set_label('🌿' + " All unnecessarily data is cleared " + '🌱')
         } else {
             button.set_sensitive(true)
         } 
+    }
 
-        
+    _resetData(button, allindicator, json, settings, parentObject, buttonsArray){
+        json.visibleChildren = [];
+        this._updateVisibleIndicator(json.visibleChildren);
+        settings.set_strv("nothiddenindicator", json.visibleChildren);
+        this._setDisbale(json, allindicator, button)
+        //parentObject.remove_all_children()
+
+        buttonsArray.map(item  => {
+            parentObject.remove(item)
+        })
+
+        this._generateButtons(json, allindicator, parentObject, settings)
+
     }
 }

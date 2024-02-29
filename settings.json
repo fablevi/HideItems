@@ -2,10 +2,5 @@
     "state": "0",
     "visibility": true,
     "defaultVisibility": false,
-    "visibleChildren": [
-        "Looking Glass Button Indicator",
-        "Gjs_color-picker_tuberry_extension_ColorButton",
-        "Gjs_runcat_kolesnikov_se_indicator_RunCatIndicator",
-        "gTile"
-    ]
+    "visibleChildren": []
 }
