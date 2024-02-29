@@ -222,6 +222,9 @@ export default class HideItemsPreferences extends ExtensionPreferences {
 
         button.set_label("Clear data from local file")
 
+        //reactive json.visibleChildren.filter((item) => { return allindicator.includes(item) });
+        this._setDisbale(json, allindicator, button)
+
         button.connect("clicked", (button) => {
             print("A gombra kattintottak!: ", button.get_label());
             this._clearLocalData(button, allindicator, json, settings);
@@ -257,5 +260,20 @@ export default class HideItemsPreferences extends ExtensionPreferences {
         this._updateVisibleIndicator(json.visibleChildren)
         settings.set_strv("nothiddenindicator", json.visibleChildren);
         console.log("nothiddenindicator", json.visibleChildren, settings.get_strv("nothiddenindicator"))
+        this._setDisbale(json, allindicator, button)
+    }
+
+    _setDisbale(json, allindicator, button) {
+        const arrayIntersection = json.visibleChildren.filter(item => !allindicator.includes(item));
+        console.log("arrayIntersection: ", arrayIntersection, arrayIntersection.length)
+
+        if (arrayIntersection.length == 0){
+            button.set_sensitive(false)
+            button.set_label("All unnecessarily data is cleared")
+        } else {
+            button.set_sensitive(true)
+        } 
+
+        
     }
 }
