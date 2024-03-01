@@ -1,5 +1,7 @@
 import Gio from 'gi://Gio';
 import Gtk from 'gi://Gtk';
+import * as Main from 'resource:///org/gnome/shell/ui/main.js';
+
 
 import { ExtensionPreferences, gettext as _ } from 'resource:///org/gnome/Shell/Extensions/js/extensions/prefs.js';
 
@@ -165,6 +167,16 @@ export default class HideItemsPreferences extends ExtensionPreferences {
     }
 
     _getAllIndicator(settings) {
+        //Main.panel._rightBox.get_children()
+
+        /*console.log(settings.get_strv("allindicator"))
+        console.log(settings.get_strv("allindicator").length)
+
+        if(settings.get_strv("allindicator").length == 0) {
+            return settings.get_strv("allindicator")
+        }else{
+            return settings.get_strv("allindicator")
+        }*/
         return settings.get_strv("allindicator")
     }
 
