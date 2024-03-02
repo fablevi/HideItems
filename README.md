@@ -8,6 +8,22 @@ This is a GNOME extension from GNOME 45.
 The idea is came from MacOS, [Hidden](https://github.com/dwarvesf/hidden) extension.
 This extension provide help for a clean interface on the top bar.
 
+## Update:
+Now you can select different icons of the top panel!
+This is ⚠️EXPERIMENTAL⚠️, there is could be some bugs 🪲!
+
+There could be bugs with other extensions, with multiple icons.
+
+I found out like: ([ Tray icon reloaded ](https://github.com/MartinPL/Tray-Icons-Reloaded))
+
+<p align='center'>
+        <img src='./pics/prefs.png'>
+</p>
+
+New settings is the indicator could have default visibility if save state if off!
+
+Now you can set default what icons shown, and delete unnecessarily data from local json file!
+
 # Install
 
   ## 1. method
