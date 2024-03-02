@@ -3,8 +3,8 @@
     "visibility": true,
     "defaultVisibility": false,
     "visibleChildren": [
-        "Debian Linux Updates Indicator",
         "Gjs_runcat_kolesnikov_se_indicator_RunCatIndicator",
-        "Looking Glass Button Indicator"
+        "Looking Glass Button Indicator",
+        "On The Top"
     ]
 }
