@@ -17,6 +17,7 @@ export default class HideItems extends Extension {
         this.settings = this.getSettings();
         this.settings.connect("changed::hideiconstate", this._changeState.bind(this))
         this.settings.connect("changed::nothiddenindicator", this._settingsHiddenIndicatorStateChange.bind(this))
+        this.settings.connect("changed::topbarupdater", this._updateIcon.bind(this))
 
         console.log("Hide Items Extension started...");
         this._indicator = null;
@@ -209,6 +210,10 @@ export default class HideItems extends Extension {
     }
 
     _removedIconListener(container, actor) {
+        this._sendItemsToPrefs(this._getEveryChildrenFrom_RightBox())
+    }
+
+    _updateIcon(){
         this._sendItemsToPrefs(this._getEveryChildrenFrom_RightBox())
     }
 

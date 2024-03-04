@@ -10,6 +10,8 @@ export default class HideItemsPreferences extends ExtensionPreferences {
         let settings = this.getSettings();
         let json = this._importJSONFile();
 
+        this._updateIndicatorsOnRightBox(settings);
+
         let builder = new Gtk.Builder();
         builder.set_translation_domain(this.metadata['gettext-domain']);
         builder.add_from_file(this.dir.get_child('settings.ui').get_path());
@@ -23,7 +25,7 @@ export default class HideItemsPreferences extends ExtensionPreferences {
         }
 
         comboRowState.connect("notify::selected-item", () => {
-            this._comboRowStateChange(comboRowState, settings)
+            this._comboRowStateChange(comboRowState, settings);
         })
 
         let comboRowDefVisibility = builder.get_object('defualtvisibility');
@@ -326,5 +328,13 @@ export default class HideItemsPreferences extends ExtensionPreferences {
 
         this._generateButtons(json, allindicator, parentObject, settings)
 
+    }
+
+    _updateIndicatorsOnRightBox(settings){
+        if(settings.get_string("topbarupdater") == "0"){
+            settings.set_string("topbarupdater", "1")
+        }else{
+            settings.set_string("topbarupdater", "0")
+        }
     }
 }
