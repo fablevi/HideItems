@@ -187,8 +187,8 @@ export default class HideItemsPreferences extends ExtensionPreferences {
 
         let buttonsArray = [];
 
-        let visibilityIconFront = '⚡️🔥'
-        let visibilityIconBack = '🔥⚡️'
+        let visibilityIconFront = '🔥'
+        let visibilityIconBack = '🔥'
 
         allindicator.map((item, index) => {
 
