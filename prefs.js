@@ -7,6 +7,7 @@ import { ExtensionPreferences, gettext as _ } from 'resource:///org/gnome/Shell/
 
 export default class HideItemsPreferences extends ExtensionPreferences {
     fillPreferencesWindow(window) {
+        window.set_default_size(700-122, 800-122);
         let settings = this.getSettings();
         let json = this._importJSONFile();
 
