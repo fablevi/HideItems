@@ -2,7 +2,6 @@ import Gio from 'gi://Gio';
 import Gtk from 'gi://Gtk';
 //import * as Main from 'resource:///org/gnome/shell/ui/main.js';
 
-
 import { ExtensionPreferences, gettext as _ } from 'resource:///org/gnome/Shell/Extensions/js/extensions/prefs.js';
 
 export default class HideItemsPreferences extends ExtensionPreferences {
