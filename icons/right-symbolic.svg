@@ -1,4 +1,3 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<svg width="16px" height="16px" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 16 16" version="1.1" >2
-  <path fill-rule="evenodd" d="M11.354 1.646a.5.5 0 0 1 0 .708L5.707 8l5.647 5.646a.5.5 0 0 1-.708.708l-6-6a.5.5 0 0 1 0-.708l6-6a.5.5 0 0 1 .708 0"/>
-</svg>
+<svg width="16px" height="16px" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 16 16" version="1.1" >
+<path d="M16.501043,6.783943c-.488611-.488591-1.277905-.488591-1.766515,0l-5.75057,5.750336c-.488611.488591-.488611,1.277852,0,1.766443l5.75057,5.750336c.488611.488591,1.277905.488591,1.766515,0s.488611-1.277852,0-1.766443l-4.861049-4.873379l4.861049-4.860851c.476082-.488591.476082-1.29038,0-1.766443Z" transform="translate(-4.742501-5.4175)"/></svg>

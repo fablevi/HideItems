@@ -169,16 +169,6 @@ export default class HideItemsPreferences extends ExtensionPreferences {
     }
 
     _getAllIndicator(settings) {
-        //Main.panel._rightBox.get_children()
-
-        /*console.log(settings.get_strv("allindicator"))
-        console.log(settings.get_strv("allindicator").length)
-
-        if(settings.get_strv("allindicator").length == 0) {
-            return settings.get_strv("allindicator")
-        }else{
-            return settings.get_strv("allindicator")
-        }*/
         return settings.get_strv("allindicator")
     }
 
