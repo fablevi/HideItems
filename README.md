@@ -3,7 +3,7 @@
 </p>
 
 # HideItems
-This is a GNOME extension from GNOME 45.
+This is a GNOME extension from GNOME 45,46.
 
 The idea is came from MacOS, [Hidden](https://github.com/dwarvesf/hidden) extension.
 This extension provide help for a clean interface on the top bar.
@@ -46,9 +46,7 @@ Now you can set default what icons shown, and delete unnecessarily data from loc
 
     $ reboot
      
-I tested on GNOME 45/ Ubuntu 23.10
+I tested on GNOME 45,46
 Probably it will work on every icon on the _rightBox item. I still not figure out what happens if some icon is appear on the right side of my extensions icon, but im working on it 🙂.
 
 Dont use with top panel organiser extension, it can brake it.
-
-Testing on GNOME 46!
