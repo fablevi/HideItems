@@ -1,3 +1,5 @@
+DEPRECATED/UNMAINTAINED
+
 <p align='center'>
         <img src='./pics/hideiconsext.gif'>
 </p>
