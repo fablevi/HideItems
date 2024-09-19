@@ -3,6 +3,7 @@ import * as Main from 'resource:///org/gnome/shell/ui/main.js';
 import * as PanelMenu from 'resource:///org/gnome/shell/ui/panelMenu.js';
 import * as PopupMenu from 'resource:///org/gnome/shell/ui/popupMenu.js';
 import Gio from 'gi://Gio';
+import GLib from 'gi://GLib';
 import St from 'gi://St';
 import Clutter from 'gi://Clutter';
 
@@ -14,32 +15,39 @@ export default class HideItems extends Extension {
     }
 
     enable() {
-        this.settings = this.getSettings();
-        this.settings.connect("changed::hideiconstate", this._changeState.bind(this))
-        this.settings.connect("changed::nothiddenindicator", this._settingsHiddenIndicatorStateChange.bind(this))
-        this.settings.connect("changed::topbarupdater", this._updateIcon.bind(this))
+        GLib.timeout_add(GLib.PRIORITY_DEFAULT, 2000, () => {
+            print("This message is shown after 2 seconds.");
 
-        console.log("Hide Items Extension started...");
-        this._indicator = null;
+            this.settings = this.getSettings();
+            this.settings.connect("changed::hideiconstate", this._changeState.bind(this))
+            this.settings.connect("changed::nothiddenindicator", this._settingsHiddenIndicatorStateChange.bind(this))
+            this.settings.connect("changed::topbarupdater", this._updateIcon.bind(this))
 
-        this._menu = null;
+            console.log("Hide Items Extension started...");
+            this._indicator = null;
 
-        //default visibility is true, but in the future i prepare it to state management
-        this._settingsJSON = this._importJSONFile();
-        this._visibility = this._setVisibiltyState();
+            this._menu = null;
 
-        this._iconRank = 0;
+            //default visibility is true, but in the future i prepare it to state management
+            this._settingsJSON = this._importJSONFile();
+            this._visibility = this._setVisibiltyState();
 
-        this._createButton()
-        this._setIconVisibility();
+            this._iconRank = 0;
+
+            this._createButton()
+            this._setIconVisibility();
 
 
-        //Update if a new button added or old removed from the panel
-        const shellVersion = parseFloat(Config.PACKAGE_VERSION).toString().slice(0, 2);
-        console.log(shellVersion)
-        let signalName = (shellVersion == 45) ? 'actor' : /* 46 */ 'child';
-        this._connectAddedHandlerID = Main.panel._rightBox.connect(signalName + "-added", this._addedIconListener.bind(this));
-        this._connectRemovedHandlerID = Main.panel._rightBox.connect(signalName + "-removed", this._removedIconListener.bind(this));
+            //Update if a new button added or old removed from the panel
+            const shellVersion = parseFloat(Config.PACKAGE_VERSION).toString().slice(0, 2);
+            console.log(shellVersion)
+            //let signalName = (shellVersion == 45) ? 'actor' : /* 46 */ 'child';
+            let signalName = 'child';
+            this._connectAddedHandlerID = Main.panel._rightBox.connect(signalName + "-added", this._addedIconListener.bind(this));
+            this._connectRemovedHandlerID = Main.panel._rightBox.connect(signalName + "-removed", this._removedIconListener.bind(this));
+
+            return GLib.SOURCE_REMOVE;  // Returning false stops the timer
+        });
     }
 
     disable() {
@@ -108,7 +116,6 @@ export default class HideItems extends Extension {
         this._setButtonIcon();
         this._iconRank = this._getSettingsRank();
 
-
         Main.panel.addToStatusArea(this.uuid, this._indicator, this._iconRank, "right");
 
         this._addMenu()
@@ -138,7 +145,7 @@ export default class HideItems extends Extension {
     }
 
     _getSettingsRank() {
-        var rightBoxItems = Main.panel._rightBox.get_children();
+        /*var rightBoxItems = Main.panel._rightBox.get_children();
         var rank = null;
         rightBoxItems.map((item, index) => {
             if (item === Main.panel.statusArea.quickSettings.get_parent()) {
@@ -146,7 +153,10 @@ export default class HideItems extends Extension {
             }
         })
         //console.log("index: ", rank)
-        return rank;
+        return rank;*/
+        var rightBoxItemsLength = Main.panel._rightBox.get_children().length;
+        return rightBoxItemsLength - 1;
+        //return 200;
     }
 
     //CLICKED BUTTON
@@ -179,15 +189,15 @@ export default class HideItems extends Extension {
         })
     }
 
-    _isVisibleChildrenInIt(item){
+    _isVisibleChildrenInIt(item) {
         var boolean = true;
         var childrenName = null;
-        if(item.accessible_name !== ""){
+        if (item.accessible_name !== "") {
             childrenName = item.accessible_name;
-        }else{
+        } else {
             childrenName = item.constructor.$gtype.name
         }
-        this._settingsJSON.visibleChildren.map((item,index)=>{
+        this._settingsJSON.visibleChildren.map((item, index) => {
             item == childrenName ? boolean = false : null;
         })
 
@@ -213,7 +223,7 @@ export default class HideItems extends Extension {
         this._sendItemsToPrefs(this._getEveryChildrenFrom_RightBox())
     }
 
-    _updateIcon(){
+    _updateIcon() {
         this._sendItemsToPrefs(this._getEveryChildrenFrom_RightBox())
     }
 
@@ -289,6 +299,7 @@ export default class HideItems extends Extension {
         this._settingsJSON = this._importJSONFile();
     }
 
+    /*
     //icon index change EXPERIMENTAL!!!
     _changeIndicatorIndex() {
         //Main.panel.statusArea.quickSettings 
@@ -316,38 +327,37 @@ export default class HideItems extends Extension {
         })
         //console.log("index: ", rank)
         return rank;
-    }
+    }*/
 
     //changeHiddenIcons
-    _getEveryChildrenFrom_RightBox(){
+    _getEveryChildrenFrom_RightBox() {
         var rightBoxItems = Main.panel._rightBox.get_children();
         var childrenNames = [];
         rightBoxItems.map((item, index) => {
             if (item.get_first_child() !== Main.panel.statusArea.quickSettings && item.get_first_child().accessible_name !== "Hide Items") {
-                if(item.get_first_child().accessible_name !== ""){
+                if (item.get_first_child().accessible_name !== "") {
                     childrenNames.push(item.get_first_child().accessible_name);
-                }else{
+                } else {
                     childrenNames.push(item.get_first_child().constructor.$gtype.name);
                 }
             }
         })
-        console.log(childrenNames);
         return childrenNames;
     }
 
-    _sendItemsToPrefs(childrenNames){
-        this.settings.set_strv('allindicator',childrenNames)
+    _sendItemsToPrefs(childrenNames) {
+        this.settings.set_strv('allindicator', childrenNames)
     }
 
     //iconHideOrVisibleStateChange
-    _settingsHiddenIndicatorStateChange(){
+    _settingsHiddenIndicatorStateChange() {
         this._settingsJSON = this._importJSONFile();
-        
+
         var rightBoxItems = Main.panel._rightBox.get_children();
         rightBoxItems.map((item, index) => {
             if (item.child !== Main.panel.statusArea.quickSettings && item.child !== this._indicator && this._isVisibleChildrenInIt(item.child)) {
                 item.visible = this._visibility;
-            }else{
+            } else {
                 item.visible = true;
             }
         })

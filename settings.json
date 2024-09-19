@@ -2,11 +2,5 @@
     "state": "0",
     "visibility": true,
     "defaultVisibility": false,
-    "visibleChildren": [
-        "Gjs_runcat_kolesnikov_se_indicator_RunCatIndicator",
-        "Looking Glass Button Indicator",
-        "Stop Screencast",
-        "Stop Screen Sharing",
-        "Gjs_ui_dateMenu_DateMenuButton"
-    ]
+    "visibleChildren": []
 }
